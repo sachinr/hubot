@@ -6,7 +6,7 @@ module.exports = (robot) ->
   query = process.env.TWITTER_MENTION_QUERY
 
   if query?
-    new cronJob '*/1 * * * *', ->
+    new cronJob '*/5 * * * *', ->
       last_tweet = robot.brain.data.last_tweet
       last_tweet_id = if last_tweet then last_tweet.id_str else ''
       response.http('http://search.twitter.com/search.json')
@@ -15,9 +15,11 @@ module.exports = (robot) ->
           tweets = JSON.parse(body)
           if tweets.results? and tweets.results.length > 0
             for tweet in tweets.results.reverse()
-              robot.adapter.send '', "#{tweet.from_user_name} tweeted #{tweet.text}"
-              robot.adapter.send '', "http://twitter.com/#!/#{tweet.from_user}/status/#{tweet.id_str}"
+              sendMessage robot, "http://twitter.com/#!/#{tweet.from_user}/status/#{tweet.id_str}"
               robot.brain.data.last_tweet = tweet
     , null, true
   else
-    robot.adapter.send '', 'No Query string provided'
+    sendMessage robot, 'No Query string provided'
+
+sendMessage = (robot, str) ->
+  robot.adapter.send({room: process.env.TWITTER_MENTION_ROOM}, str )
