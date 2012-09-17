@@ -3,12 +3,14 @@
 module.exports = (robot) ->
   cronJob = require('cron').CronJob
   response = new robot.Response(robot)
-  query = escape(process.env.TWITTER_MENTION_QUERY)
+  query = process.env.TWITTER_MENTION_QUERY
 
-  if query
+  if query?
     new cronJob '*/1 * * * *', ->
+      last_tweet = robot.brain.data.last_tweet
+      last_tweet_id = if last_tweet then last_tweet.id_str else ''
       response.http('http://search.twitter.com/search.json')
-        .query(q: query, since_id: robot.brain.data.last_tweet.id_str)
+        .query(q: escape(query), since_id: last_tweet_id)
         .get() (err, res, body) ->
           tweets = JSON.parse(body)
           if tweets.results? and tweets.results.length > 0
