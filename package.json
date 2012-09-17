@@ -19,6 +19,11 @@
     "hubot-scripts": ">=2.0.8",
     "optparse": "1.0.3",
     "cron": ""
-  }
+  },
+
+  "engines": {
+    "node": "0.6.x",
+    "npm": "1.1.x"
+  },
 }
 
