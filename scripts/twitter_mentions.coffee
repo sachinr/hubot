@@ -2,17 +2,15 @@
 #   Continuously searches Twitter for mentions of a specified string.
 #
 # Commands:
-#   hubot set twitter query - Set search query
+#   hubot set twitter query <search_term> - Set search query
 #   hubot show twitter query - Show current search query
 #
 # Dependencies:
-#   None
+#   "cron": "1.0.1"
 #
 # Configuration:
 #   HUBOT_TWITTER_MENTION_QUERY
 #   HUBOT_TWITTER_MENTION_ROOM
-#
-# Commands:
 #
 # Author:
 #   Sachinr
@@ -20,7 +18,6 @@
 module.exports = (robot) ->
   cronJob  = require('cron').CronJob
   response = new robot.Response(robot)
-
   robot.brain.data.twitter_mention ?= {}
 
   if twitter_query(robot)?
@@ -32,9 +29,9 @@ module.exports = (robot) ->
         .get() (err, res, body) ->
           tweets = JSON.parse(body)
           if tweets.results? and tweets.results.length > 0
+            robot.brain.data.twitter_mention.last_tweet = tweets.results[0].id_str
             for tweet in tweets.results.reverse()
               sendMessage robot, "http://twitter.com/#!/#{tweet.from_user}/status/#{tweet.id_str}"
-              robot.brain.data.twitter_mention.last_tweet = tweet.id_str
 
     , null, true
   else
