@@ -8,7 +8,7 @@ module.exports = (robot) ->
 
   if twitter_query(robot)?
     new cronJob '*/5 * * * *', ->
-      last_tweet = robot.brain.data.last_tweet || ''
+      last_tweet = robot.brain.data.twitter_mention.last_tweet || ''
 
       response.http('http://search.twitter.com/search.json')
         .query(q: escape(twitter_query(robot)), since_id: last_tweet)
