@@ -1,4 +1,21 @@
-# Continuously searches Twitter for mentions of a specified string.
+# Description:
+#   Continuously searches Twitter for mentions of a specified string.
+#
+# Commands:
+#   hubot set twitter query - Set search query
+#   hubot show twitter query - Show current search query
+#
+# Dependencies:
+#   None
+#
+# Configuration:
+#   HUBOT_TWITTER_MENTION_QUERY
+#   HUBOT_TWITTER_MENTION_ROOM
+#
+# Commands:
+#
+# Author:
+#   Sachinr
 
 module.exports = (robot) ->
   cronJob  = require('cron').CronJob
